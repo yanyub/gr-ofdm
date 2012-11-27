@@ -46,7 +46,7 @@ namespace gr {
         * class. ofdm::ofdm_header_bb::make is the public interface for
         * creating new instances.
         */
-       static sptr make(int header_len, void (*formatter_cb)(long, unsigned char*));
+       static sptr make(int header_len, void (*formatter_cb)(long, long, unsigned char*));
     };
 
   } // namespace ofdm

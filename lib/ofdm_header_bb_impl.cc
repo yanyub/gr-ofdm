@@ -29,7 +29,7 @@ namespace gr {
   namespace ofdm {
 
     ofdm_header_bb::sptr
-    ofdm_header_bb::make(int header_len, void (*formatter_cb)(long, unsigned char*))
+    ofdm_header_bb::make(int header_len, void (*formatter_cb)(long, long, unsigned char*))
     {
       return gnuradio::get_initial_sptr (new ofdm_header_bb_impl(header_len, formatter_cb));
     }
@@ -37,7 +37,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    ofdm_header_bb_impl::ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, unsigned char*))
+    ofdm_header_bb_impl::ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, long, unsigned char*))
       : gr_block("ofdm_header_bb",
 		 gr_make_io_signature(1, 1, sizeof (char)),
 		 gr_make_io_signature(1, 1, sizeof (char))),
@@ -45,8 +45,22 @@ namespace gr {
     {
       set_output_multiple(header_len);
       set_tag_propagation_policy(TPP_DONT);
+      if (d_formatter_cb == NULL)
+	d_formatter_cb = &default_formatter;
     }
 
+    void
+    ofdm_header_bb_impl::default_formatter(long packet_size, long header_len, unsigned char* buf)
+    {
+      // Default header formatter if the user doesn't specify one
+      // BPSK, MSB first, 16 bit packet length, pad with zeros
+      int i;
+      for (i=0;i<16;i++)
+	buf[i] = (unsigned char) (packet_size >> (15-i)) & 1;
+      while (i<header_len)
+	buf[i] = 0;
+    }
+    
     /*
      * Our virtual destructor.
      */
@@ -81,7 +95,7 @@ namespace gr {
 	}
 
 	if (ninput_items[0] >= packet_length) {
-	  d_formatter_cb(packet_length, out);  // tell formatter where to put output, how long packet is
+	  d_formatter_cb(packet_length, d_header_len, out);  // tell formatter where to put output, how long packet is
 
 	  pmt::pmt_t key = pmt::pmt_string_to_symbol("length");
 	  pmt::pmt_t value = pmt::pmt_from_long(d_header_len);
