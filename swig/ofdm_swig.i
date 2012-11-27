@@ -8,6 +8,9 @@
 %include "ofdm_swig_doc.i"
 
 %{
+#include "ofdm/crc32_bb.h"
 %}
 
 
+%include "ofdm/crc32_bb.h"
+GR_SWIG_BLOCK_MAGIC2(ofdm, crc32_bb);

@@ -21,6 +21,5 @@
 # Install public header files
 ########################################################################
 install(FILES
-    api.h
-    DESTINATION include/ofdm
+    api.h crc32_bb.h DESTINATION include/ofdm
 )
