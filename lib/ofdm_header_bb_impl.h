@@ -32,7 +32,7 @@ namespace gr {
       // Nothing to declare in this block.
 
     public:
-      ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, char*));
+      ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, unsigned char*));
       ~ofdm_header_bb_impl();
 
       // Where all the action really happens
@@ -40,6 +40,11 @@ namespace gr {
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items);
+
+      int d_header_len;
+      void (*d_formatter_cb)(long,unsigned char*);    
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+      int d_input_size;
     };
 
   } // namespace ofdm

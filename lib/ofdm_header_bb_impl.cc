@@ -29,19 +29,23 @@ namespace gr {
   namespace ofdm {
 
     ofdm_header_bb::sptr
-    ofdm_header_bb::make(int header_len, void (*formatter_cb)(long, char*))
+    ofdm_header_bb::make(int header_len, void (*formatter_cb)(long, unsigned char*))
     {
-      return gnuradio::get_initial_sptr (new ofdm_header_bb_impl(header_len, (*formatter_cb)(long, char*)));
+      return gnuradio::get_initial_sptr (new ofdm_header_bb_impl(header_len, formatter_cb));
     }
 
     /*
      * The private constructor
      */
-    ofdm_header_bb_impl::ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, char*))
+    ofdm_header_bb_impl::ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, unsigned char*))
       : gr_block("ofdm_header_bb",
-		      gr_make_io_signature(<+MIN_IN+>, <+MAX_IN+>, sizeof (<+float+>)),
-		      gr_make_io_signature(<+MIN_IN+>, <+MAX_IN+>, sizeof (<+float+>)))
-    {}
+		 gr_make_io_signature(1, 1, sizeof (char)),
+		 gr_make_io_signature(1, 1, sizeof (char))),
+	d_header_len(header_len), d_formatter_cb(formatter_cb), d_input_size(1)
+    {
+      set_output_multiple(header_len);
+      set_tag_propagation_policy(TPP_DONT);
+    }
 
     /*
      * Our virtual destructor.
@@ -50,22 +54,48 @@ namespace gr {
     {
     }
 
+    void
+    ofdm_header_bb_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+    {
+	    ninput_items_required[0] = d_input_size;
+    }
+
     int
     ofdm_header_bb_impl::general_work (int noutput_items,
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-        const float *in = (const float *) input_items[0];
-        float *out = (float *) output_items[0];
+        const unsigned char *in = (const unsigned char *) input_items[0];
+        unsigned char *out = (unsigned char *) output_items[0];
 
-        // Do <+signal processing+>
-        // Tell runtime system how many input items we consumed on
-        // each input stream.
-        consume_each (noutput_items);
+	long packet_length = 0;
+	
+	std::vector<gr_tag_t> tags;
+	this->get_tags_in_range(tags, 0, 0, 1);  // get tags from first element only
 
-        // Tell runtime system how many output items we produced.
-        return noutput_items;
+	for (int i = 0; i < tags.size(); i++) {
+		if (pmt::pmt_symbol_to_string(tags[i].key) == "length") {
+			packet_length = pmt::pmt_to_long(tags[i].value);
+		}
+	}
+
+	if (ninput_items[0] >= packet_length) {
+	  d_formatter_cb(packet_length, out);  // tell formatter where to put output, how long packet is
+
+	  pmt::pmt_t key = pmt::pmt_string_to_symbol("length");
+	  pmt::pmt_t value = pmt::pmt_from_long(d_header_len);
+	  //write at tag to output port 0 with given absolute item offset
+	  this->add_item_tag(0, 0, key, value);
+	  
+	  consume_each(packet_length);
+	  d_input_size = 1;
+	  return d_header_len;
+	}
+	
+	// fall through to here if we aren't given a whole input packet
+	d_input_size = packet_length;
+	return 0;
     }
 
 
