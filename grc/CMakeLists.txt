@@ -16,7 +16,7 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
 install(FILES
-    ofdm_crc32_bb.xml DESTINATION share/gnuradio/grc/blocks
+    ofdm_crc32_bb.xml
+    ofdm_carrier_allocator_cvc.xml DESTINATION share/gnuradio/grc/blocks
 )

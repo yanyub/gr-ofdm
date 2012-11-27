@@ -78,7 +78,7 @@ namespace gr {
 	this->get_tags_in_range(tags, 0, 0, 1);
 	//const size_t ninput_items = noutput_items; //assumption for sync block, this can change
 	for (int i = 0; i < tags.size(); i++) {
-		if (pmt::pmt_symbol_to_string(tags[i].key) == "length") {
+		if (pmt::pmt_symbol_to_string(tags[i].key) == "length") { // FIXME choose tag len key
 			packet_length = pmt::pmt_to_long(tags[i].value);
 		}
 	}
@@ -86,7 +86,7 @@ namespace gr {
 	assert(packet_length <= MTU-4);
 
 	assert(noutput_items >= MTU);
-	// FIXME run this multiple times if input_items >= N * packet_length
+	// TODO run this multiple times if input_items >= N * packet_length
 	if (ninput_items[0] >= packet_length ) {
 		memcpy((void *) out, (const void *) in, packet_length);
 		crc = digital_crc32(in, packet_length);
@@ -98,9 +98,11 @@ namespace gr {
 		this->add_item_tag(0, 0, key, value);
 
 		consume_each(packet_length);
+		d_input_size = 1;
 		return packet_length + 4;
 	}
 
+	// If this didn't work, increase the input size
 	d_input_size = packet_length;
         return 0;
     }
