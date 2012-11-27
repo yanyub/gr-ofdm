@@ -26,7 +26,6 @@
  */
 
 #include "qa_ofdm.h"
-#include "qa_carrier_allocator_cvc.h"
 
 CppUnit::TestSuite *
 qa_ofdm::suite()
@@ -35,3 +34,4 @@ qa_ofdm::suite()
 
   return s;
 }
+

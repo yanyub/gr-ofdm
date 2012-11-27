@@ -30,6 +30,17 @@ class qa_carrier_allocator_cvc (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t (self):
+        fft_len = 16
+        occupied_carriers = ((1, 3, 4, 11, 12, 14),)
+        pilot_carriers = ((2, 13),)
+        pilot_symbols = ((1, 1),)
+        src = gr.vector_source_c(FIXME)
+        alloc = ofdm.carrier_allocator_cvc(fft_len,
+                       occupied_carriers,
+                       pilot_carriers,
+                       pilot_symbols,
+                       "length")
+        sink = gr.vector_sink_c()
         # set up fg
         self.tb.run ()
         # check data

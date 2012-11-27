@@ -43,7 +43,7 @@ namespace gr {
     {
     public:
        typedef boost::shared_ptr<crc32_bb> sptr;
-       static sptr make();
+       static sptr make(int mtu=4096);
     };
 
   } // namespace ofdm

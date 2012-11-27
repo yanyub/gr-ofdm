@@ -43,7 +43,8 @@ namespace gr {
 		                 std::vector<std::vector<int> > occupied_carriers,
 				 std::vector<std::vector<int> > pilot_carriers,
 				 std::vector<std::vector<gr_complex> > pilot_symbols,
-				 std::string tag_len_key);
+				 std::string tag_len_key,
+				 int mtu);
       ~carrier_allocator_cvc_impl();
 
 	void forecast(int noutput_items, gr_vector_int &ninput_items_required);

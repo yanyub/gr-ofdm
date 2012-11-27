@@ -46,7 +46,7 @@ namespace gr {
         * class. ofdm::carrier_allocator_cvc::make is the public interface for
         * creating new instances.
         */
-       static sptr make(int n_carriers,
+       static sptr make(int fft_len,
 		        const std::vector<std::vector<int> > occupied_carriers,
 			const std::vector<std::vector<int> > pilot_carriers,
 			const std::vector<std::vector<gr_complex> > pilot_symbols,

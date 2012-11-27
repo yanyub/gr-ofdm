@@ -30,21 +30,22 @@ namespace gr {
   namespace ofdm {
 
     crc32_bb::sptr
-    crc32_bb::make()
+    crc32_bb::make(int mtu)
     {
-      return gnuradio::get_initial_sptr (new crc32_bb_impl());
+      return gnuradio::get_initial_sptr (new crc32_bb_impl(mtu));
     }
 
     /*
      * The private constructor
      */
-    crc32_bb_impl::crc32_bb_impl()
+    crc32_bb_impl::crc32_bb_impl(int mtu)
       : gr_block("crc32_bb",
 		      gr_make_io_signature(1, 1, sizeof (char)),
 		      gr_make_io_signature(1, 1, sizeof (char))),
-	d_input_size(1)
+	d_input_size(1),
+	d_mtu(mtu)
     {
-	    set_output_multiple(MTU);
+	    set_output_multiple(d_mtu);
 	    set_tag_propagation_policy(TPP_DONT);
     }
 
@@ -83,9 +84,9 @@ namespace gr {
 		}
 	}
 	assert(packet_length != 0);
-	assert(packet_length <= MTU-4);
+	assert(packet_length <= d_mtu-4);
 
-	assert(noutput_items >= MTU);
+	assert(noutput_items >= d_mtu);
 	// TODO run this multiple times if input_items >= N * packet_length
 	if (ninput_items[0] >= packet_length ) {
 		memcpy((void *) out, (const void *) in, packet_length);

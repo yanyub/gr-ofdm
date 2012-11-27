@@ -23,8 +23,6 @@
 
 #include <ofdm/crc32_bb.h>
 
-#define MTU 4096
-
 namespace gr {
   namespace ofdm {
 
@@ -32,9 +30,10 @@ namespace gr {
     {
     private:
 	int d_input_size;
+	int d_mtu;
 
     public:
-      crc32_bb_impl();
+      crc32_bb_impl(int mtu);
       ~crc32_bb_impl();
 
 	void forecast(int noutput_items, gr_vector_int &ninput_items_required);
