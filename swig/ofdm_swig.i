@@ -9,8 +9,11 @@
 
 %{
 #include "ofdm/crc32_bb.h"
+#include "ofdm/ofdm_header_bb.h"
 %}
 
 
 %include "ofdm/crc32_bb.h"
 GR_SWIG_BLOCK_MAGIC2(ofdm, crc32_bb);
+%include "ofdm/ofdm_header_bb.h"
+GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_header_bb);
