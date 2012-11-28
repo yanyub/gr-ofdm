@@ -95,7 +95,7 @@ namespace gr {
 	gr_complex next_symbol;
 
 	std::vector<gr_tag_t> tags;
-	this->get_tags_in_range(tags, 0, 0, 1);
+	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+1);
 	for (int i = 0; i < tags.size(); i++) {
 		if (pmt::pmt_symbol_to_string(tags[i].key) == d_tag_len_key) {
 			packet_length = pmt::pmt_to_long(tags[i].value);
