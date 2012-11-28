@@ -19,5 +19,6 @@
 install(FILES
     ofdm_crc32_bb.xml
     ofdm_carrier_allocator_cvc.xml
-    ofdm_ofdm_header_bb.xml DESTINATION share/gnuradio/grc/blocks
+    ofdm_ofdm_header_bb.xml
+    ofdm_crc32_check_bb.xml DESTINATION share/gnuradio/grc/blocks
 )
