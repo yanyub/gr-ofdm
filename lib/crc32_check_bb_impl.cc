@@ -83,14 +83,13 @@ namespace gr {
 	    packet_length = pmt::pmt_to_long(tags[i].value);
 	  }
 	}	assert(packet_length != 0);
-
 	assert(packet_length <= d_mtu);
 	assert(noutput_items >= d_mtu-4);
 
 	// FIXME copy existing tags to output
 	if (ninput_items[0] >= packet_length ) {
-	  crc = digital_crc32(in, packet_length);
-	  if(crc == 0) {
+	  crc = digital_crc32(in, packet_length-4);
+	  if(crc == *(uint32_t *)(in+packet_length-4)) {
 	    memcpy((void *) out, (const void *) in, packet_length);
 	  
 	    pmt::pmt_t key = pmt::pmt_string_to_symbol("length");

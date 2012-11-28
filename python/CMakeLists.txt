@@ -46,3 +46,4 @@ GR_ADD_TEST(qa_tagged_stream_mux ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR
 GR_ADD_TEST(qa_carrier_allocator_cvc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_carrier_allocator_cvc.py)
 GR_ADD_TEST(qa_ofdm_header_bb ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_ofdm_header_bb.py)
 GR_ADD_TEST(qa_crc32_check_bb ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_crc32_check_bb.py)
+GR_ADD_TEST(qa_packed_to_unpacked ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_packed_to_unpacked.py)
