@@ -47,9 +47,10 @@ class qa_crc32_bb (gr_unittest.TestCase):
         src  = gr.message_source(gr.sizeof_char, tx_msgq, tagname)
         snk = gr.message_sink(gr.sizeof_char, rx_msgq, False, tagname)
         mtu = 4096
+        crc_check = ofdm.crc32_bb(True, mtu)
         crc = ofdm.crc32_bb(False, mtu, tagname)
-        self.tb.connect(src, crc, snk)
-        #self.tb.connect(src, snk)
+        self.tb.connect(src, crc, crc_check, snk)
+        self.tb.connect(crc, snk2)
         self.tb.start()
         time.sleep(1)
         self.tb.stop()
