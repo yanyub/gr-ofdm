@@ -1,19 +1,21 @@
 /* -*- c++ -*- */
-/* 
- * Copyright 2012 <+YOU OR YOUR COMPANY+>.
+/*
+ * Copyright 2012 Free Software Foundation, Inc.
  * 
- * This is free software; you can redistribute it and/or modify
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
  * 
- * This software is distributed in the hope that it will be useful,
+ * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
+ * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
@@ -67,6 +69,7 @@ namespace gr {
 	    // and pilot_carriers[i].size() == pilot_symbols[i].size() \-/ i
 	    set_output_multiple(d_mtu);
 	    set_tag_propagation_policy(TPP_DONT);
+	    set_relative_rate(1.0/d_occupied_carriers[0].size());
     }
 
     /*
@@ -111,8 +114,6 @@ namespace gr {
 	if (packet_length % d_fft_len)
 		n_ofdm_symbols++;
 
-	// FIXME add flush functionality (send an empty OFDM symbol to flush the cyclic prefixer)
-	// TODO run this multiple times if input_items >= N * packet_length
 	for (int i = 0; i < n_ofdm_symbols; i++) {
 		int curr_set = 0;
 		for (int k = 0; k < d_occupied_carriers[curr_set].size(); k++) {
