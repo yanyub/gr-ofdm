@@ -45,8 +45,10 @@ class qa_crc32_bb (gr_unittest.TestCase):
             tx_msgq.insert_tail(gr.message_from_string(d))
         tagname = "packet_length"
         src  = gr.message_source(gr.sizeof_char, tx_msgq, tagname)
-        snk = gr.message_sink(gr.sizeof_char, rx_msgq, False, "packet_length")
-        self.tb.connect(src, ofdm.crc32_bb(), snk)
+        snk = gr.message_sink(gr.sizeof_char, rx_msgq, False, tagname)
+        mtu = 4096
+        crc = ofdm.crc32_bb(mtu, tagname)
+        self.tb.connect(src, crc, snk)
         #self.tb.connect(src, snk)
         self.tb.start()
         time.sleep(1)

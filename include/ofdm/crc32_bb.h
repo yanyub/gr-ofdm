@@ -24,6 +24,7 @@
 
 #include <ofdm/api.h>
 #include <gr_block.h>
+#include <string>
 
 namespace gr {
   namespace ofdm {
@@ -43,7 +44,7 @@ namespace gr {
     {
     public:
        typedef boost::shared_ptr<crc32_bb> sptr;
-       static sptr make(int mtu=4096);
+       static sptr make(int mtu=4096, const std::string& lengthtagname="length");
     };
 
   } // namespace ofdm

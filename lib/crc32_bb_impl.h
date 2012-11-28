@@ -31,12 +31,13 @@ namespace gr {
     private:
 	int d_input_size;
 	int d_mtu;
+    std::string d_lengthtagname;
 
     public:
-      crc32_bb_impl(int mtu);
+      crc32_bb_impl(int mtu, const std::string& lengthtagname);
       ~crc32_bb_impl();
 
-	void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
       // Where all the action really happens
       int general_work(int noutput_items,
