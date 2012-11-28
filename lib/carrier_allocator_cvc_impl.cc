@@ -111,6 +111,7 @@ namespace gr {
 	if (packet_length % d_fft_len)
 		n_ofdm_symbols++;
 
+	// FIXME add flush functionality (send an empty OFDM symbol to flush the cyclic prefixer)
 	// TODO run this multiple times if input_items >= N * packet_length
 	for (int i = 0; i < n_ofdm_symbols; i++) {
 		int curr_set = 0;

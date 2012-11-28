@@ -18,5 +18,6 @@
 # Boston, MA 02110-1301, USA.
 install(FILES
     ofdm_crc32_bb.xml
-    ofdm_carrier_allocator_cvc.xml DESTINATION share/gnuradio/grc/blocks
+    ofdm_carrier_allocator_cvc.xml
+    ofdm_ofdm_header_bb.xml DESTINATION share/gnuradio/grc/blocks
 )
