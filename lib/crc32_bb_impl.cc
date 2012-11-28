@@ -30,21 +30,22 @@ namespace gr {
   namespace ofdm {
 
     crc32_bb::sptr
-    crc32_bb::make()
+    crc32_bb::make(int mtu)
     {
-      return gnuradio::get_initial_sptr (new crc32_bb_impl());
+      return gnuradio::get_initial_sptr (new crc32_bb_impl(mtu));
     }
 
     /*
      * The private constructor
      */
-    crc32_bb_impl::crc32_bb_impl()
+    crc32_bb_impl::crc32_bb_impl(int mtu)
       : gr_block("crc32_bb",
 		      gr_make_io_signature(1, 1, sizeof (char)),
 		      gr_make_io_signature(1, 1, sizeof (char))),
-	d_input_size(1)
+	d_input_size(1),
+	d_mtu(mtu)
     {
-	    set_output_multiple(MTU);
+	    set_output_multiple(d_mtu);
 	    set_tag_propagation_policy(TPP_DONT);
     }
 
@@ -75,18 +76,19 @@ namespace gr {
 	unsigned int crc;
 
 	std::vector<gr_tag_t> tags;
-	this->get_tags_in_range(tags, 0, 0, 1);
+	this->get_tags_in_range(tags, 0, 0, 1); // FIXME nitems_read
 	//const size_t ninput_items = noutput_items; //assumption for sync block, this can change
 	for (int i = 0; i < tags.size(); i++) {
-		if (pmt::pmt_symbol_to_string(tags[i].key) == "length") {
+		if (pmt::pmt_symbol_to_string(tags[i].key) == "length") { // FIXME choose tag len key
 			packet_length = pmt::pmt_to_long(tags[i].value);
 		}
 	}
 	assert(packet_length != 0);
-	assert(packet_length <= MTU-4);
+	assert(packet_length <= d_mtu-4);
 
-	assert(noutput_items >= MTU);
-	// FIXME run this multiple times if input_items >= N * packet_length
+	assert(noutput_items >= d_mtu);
+	// TODO run this multiple times if input_items >= N * packet_length
+	// FIXME copy existing tags to output
 	if (ninput_items[0] >= packet_length ) {
 		memcpy((void *) out, (const void *) in, packet_length);
 		crc = digital_crc32(in, packet_length);
@@ -98,9 +100,11 @@ namespace gr {
 		this->add_item_tag(0, 0, key, value);
 
 		consume_each(packet_length);
+		d_input_size = 1;
 		return packet_length + 4;
 	}
 
+	// If this didn't work, increase the input size
 	d_input_size = packet_length;
         return 0;
     }

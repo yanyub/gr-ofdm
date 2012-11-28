@@ -18,23 +18,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_OFDM_CRC32_BB_IMPL_H
-#define INCLUDED_OFDM_CRC32_BB_IMPL_H
+#ifndef INCLUDED_OFDM_CARRIER_ALLOCATOR_CVC_IMPL_H
+#define INCLUDED_OFDM_CARRIER_ALLOCATOR_CVC_IMPL_H
 
-#include <ofdm/crc32_bb.h>
+#include <string>
+#include <ofdm/carrier_allocator_cvc.h>
 
 namespace gr {
   namespace ofdm {
 
-    class crc32_bb_impl : public crc32_bb
+    class carrier_allocator_cvc_impl : public carrier_allocator_cvc
     {
     private:
-	int d_input_size;
-	int d_mtu;
+	    const int d_fft_len;
+	   const std::vector<std::vector<int> > d_occupied_carriers;
+	   const std::vector<std::vector<int> > d_pilot_carriers;
+	   const std::vector<std::vector<gr_complex> > d_pilot_symbols;
+	    std::string d_tag_len_key;
+	    long d_input_size;
+	    int d_mtu;
 
     public:
-      crc32_bb_impl(int mtu);
-      ~crc32_bb_impl();
+      carrier_allocator_cvc_impl(int fft_len,
+		                 std::vector<std::vector<int> > occupied_carriers,
+				 std::vector<std::vector<int> > pilot_carriers,
+				 std::vector<std::vector<gr_complex> > pilot_symbols,
+				 std::string tag_len_key,
+				 int mtu);
+      ~carrier_allocator_cvc_impl();
 
 	void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
@@ -48,5 +59,5 @@ namespace gr {
   } // namespace ofdm
 } // namespace gr
 
-#endif /* INCLUDED_OFDM_CRC32_BB_IMPL_H */
+#endif /* INCLUDED_OFDM_CARRIER_ALLOCATOR_CVC_IMPL_H */
 

@@ -19,8 +19,8 @@
  */
 
 
-#ifndef INCLUDED_OFDM_CRC32_BB_H
-#define INCLUDED_OFDM_CRC32_BB_H
+#ifndef INCLUDED_OFDM_OFDM_HEADER_BB_H
+#define INCLUDED_OFDM_OFDM_HEADER_BB_H
 
 #include <ofdm/api.h>
 #include <gr_block.h>
@@ -29,25 +29,28 @@ namespace gr {
   namespace ofdm {
 
     /*!
-     * \brief Byte-stream CRC block
-     * \ingroup ofdm
+     * \brief <+description of block+>
+     * \ingroup block
      *
-     * Input: stream of bytes, which form a packet. The first byte of the packet
-     * has a tag with key "length" and the value being the number of bytes in the
-     * packet.
-     *
-     * Output: The same bytes as incoming, but trailing a CRC32 of the packet.
-     * The tag is re-set to the new length.
      */
-    class OFDM_API crc32_bb : virtual public gr_block
+    class OFDM_API ofdm_header_bb : virtual public gr_block
     {
     public:
-       typedef boost::shared_ptr<crc32_bb> sptr;
-       static sptr make(int mtu=4096);
+       typedef boost::shared_ptr<ofdm_header_bb> sptr;
+
+       /*!
+        * \brief Return a shared_ptr to a new instance of ofdm::ofdm_header_bb.
+        *
+        * To avoid accidental use of raw pointers, ofdm::ofdm_header_bb's
+        * constructor is in a private implementation
+        * class. ofdm::ofdm_header_bb::make is the public interface for
+        * creating new instances.
+        */
+       static sptr make(int header_len, void (*formatter_cb)(long, long, unsigned char*));
     };
 
   } // namespace ofdm
 } // namespace gr
 
-#endif /* INCLUDED_OFDM_CRC32_BB_H */
+#endif /* INCLUDED_OFDM_OFDM_HEADER_BB_H */
 

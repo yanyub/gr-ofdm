@@ -34,3 +34,4 @@ qa_ofdm::suite()
 
   return s;
 }
+

@@ -18,36 +18,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_OFDM_OFDM_HEADER_BB_IMPL_H
+#define INCLUDED_OFDM_OFDM_HEADER_BB_IMPL_H
 
-#ifndef INCLUDED_OFDM_CRC32_BB_H
-#define INCLUDED_OFDM_CRC32_BB_H
-
-#include <ofdm/api.h>
-#include <gr_block.h>
+#include <ofdm/ofdm_header_bb.h>
 
 namespace gr {
   namespace ofdm {
 
-    /*!
-     * \brief Byte-stream CRC block
-     * \ingroup ofdm
-     *
-     * Input: stream of bytes, which form a packet. The first byte of the packet
-     * has a tag with key "length" and the value being the number of bytes in the
-     * packet.
-     *
-     * Output: The same bytes as incoming, but trailing a CRC32 of the packet.
-     * The tag is re-set to the new length.
-     */
-    class OFDM_API crc32_bb : virtual public gr_block
+    class ofdm_header_bb_impl : public ofdm_header_bb
     {
+    private:
+      // Nothing to declare in this block.
+      int d_input_size;
+      int d_header_len;
+      void (*d_formatter_cb)(long,long,unsigned char*);    
+
     public:
-       typedef boost::shared_ptr<crc32_bb> sptr;
-       static sptr make(int mtu=4096);
+      ofdm_header_bb_impl(int header_len, void (*formatter_cb)(long, long, unsigned char*));
+      ~ofdm_header_bb_impl();
+
+      // Where all the action really happens
+      int general_work(int noutput_items,
+		       gr_vector_int &ninput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items);
+
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+      static void default_formatter(long,long,unsigned char*);
     };
 
   } // namespace ofdm
 } // namespace gr
 
-#endif /* INCLUDED_OFDM_CRC32_BB_H */
+#endif /* INCLUDED_OFDM_OFDM_HEADER_BB_IMPL_H */
 
