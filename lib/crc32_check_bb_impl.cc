@@ -76,7 +76,7 @@ namespace gr {
 	unsigned int crc;
 
 	std::vector<gr_tag_t> tags;
-	this->get_tags_in_range(tags, 0, 0, 1); // FIXME nitems_read
+	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+1); // FIXME nitems_read
 	//const size_t ninput_items = noutput_items; //assumption for sync block, this can change
 	for (int i = 0; i < tags.size(); i++) {
 	  if (pmt::pmt_symbol_to_string(tags[i].key) == "length") { // FIXME choose tag len key
@@ -96,7 +96,7 @@ namespace gr {
 	    pmt::pmt_t key = pmt::pmt_string_to_symbol("length");
 	    pmt::pmt_t value = pmt::pmt_from_long(packet_length-4);
 	    //write at tag to output port 0 with given absolute item offset
-	    this->add_item_tag(0, 0, key, value);
+	    this->add_item_tag(0, this->nitems_written(0), key, value);
 	  } else {
 	    //	    std::cerr << "ERROR in CRC!\n" << std::endl;
 	  }
