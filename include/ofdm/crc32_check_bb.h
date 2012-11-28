@@ -47,7 +47,7 @@ namespace gr {
         * class. ofdm::crc32_check_bb::make is the public interface for
         * creating new instances.
         */
-       static sptr make();
+       static sptr make(int mtu);
     };
 
   } // namespace ofdm
