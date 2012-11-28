@@ -18,6 +18,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+import time
+
 from gnuradio import gr, gr_unittest
 import ofdm_swig as ofdm
 
@@ -29,20 +31,33 @@ class qa_crc32_bb (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_check_fail (self):
-        " Pass a stream without a tag, check it fails "
-        pass
-        #sink = gr.vector_sink_b()
-        #self.tb.connect(gr.vector_source_b((0,)*16), ofdm.crc32_bb(), sink)
-        #self.tb.run() # Fails
+    #def test_check_fail (self):
+    #    " Pass a stream without a tag, check it fails "
+    #    sink = gr.vector_sink_b()
+    #    self.tb.connect(gr.vector_source_b((0,)*16), ofdm.crc32_bb(), sink)
+    #    self.tb.run()
 
-    #def test_crc_len (self):
-        #data = (...)
-        #src  = ben's cool new block
-        #sink = gr.vector_sink_b()
-        #self.tb.connect(src, ofdm.crc32_bb(), sink)
-        #self.tb.run()
-        #self.assertEqual(len(sink.data()), len(data)+4)
+    def test_crc_len (self):
+        data = ('hello', 'you', 'there')
+        tx_msgq = gr.msg_queue()
+        rx_msgq = gr.msg_queue()
+        for d in data:
+            tx_msgq.insert_tail(gr.message_from_string(d))
+        tagname = "packet_length"
+        src  = gr.message_source(gr.sizeof_char, tx_msgq, tagname)
+        snk = gr.message_sink(gr.sizeof_char, rx_msgq, False, "packet_length")
+        self.tb.connect(src, ofdm.crc32_bb(), snk)
+        #self.tb.connect(src, snk)
+        self.tb.start()
+        time.sleep(1)
+        self.tb.stop()
+        for d in data:
+            msg = rx_msgq.delete_head()
+            contents = msg.to_string()
+            print(d, contents)
+            self.assertEqual(len(d)+4, len(contents))
+        
+        
 
 if __name__ == '__main__':
     gr_unittest.run(qa_crc32_bb, "qa_crc32_bb.xml")

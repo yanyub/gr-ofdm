@@ -21,5 +21,5 @@
 # Install public header files
 ########################################################################
 install(FILES
-    api.h crc32_bb.h DESTINATION include/ofdm
+    api.h crc32_bb.h tagged_stream_mux.h DESTINATION include/ofdm
 )

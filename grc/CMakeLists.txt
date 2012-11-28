@@ -18,5 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    ofdm_crc32_bb.xml DESTINATION share/gnuradio/grc/blocks
+    ofdm_crc32_bb.xml
+    ofdm_tagged_stream_mux.xml DESTINATION share/gnuradio/grc/blocks
 )
