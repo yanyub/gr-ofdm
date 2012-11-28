@@ -32,21 +32,22 @@ namespace gr {
   namespace ofdm {
 
     crc32_bb::sptr
-    crc32_bb::make(int mtu, const std::string& lengthtagname)
+    crc32_bb::make(bool check, int mtu, const std::string& lengthtagname)
     {
-      return gnuradio::get_initial_sptr (new crc32_bb_impl(mtu, lengthtagname));
+      return gnuradio::get_initial_sptr (new crc32_bb_impl(check, mtu, lengthtagname));
     }
 
     /*
      * The private constructor
      */
-    crc32_bb_impl::crc32_bb_impl(int mtu, const std::string& lengthtagname)
+    crc32_bb_impl::crc32_bb_impl(bool check, int mtu, const std::string& lengthtagname)
       : gr_block("crc32_bb",
 		      gr_make_io_signature(1, 1, sizeof (char)),
 		      gr_make_io_signature(1, 1, sizeof (char))),
 	d_input_size(1),
     d_mtu(mtu),
-    d_lengthtagname(lengthtagname)
+    d_lengthtagname(lengthtagname),
+    d_check(check)
     {
 	    set_output_multiple(d_mtu);
 	    set_tag_propagation_policy(TPP_DONT);
@@ -77,6 +78,7 @@ namespace gr {
         const unsigned char *in = (const unsigned char *) input_items[0];
         unsigned char *out = (unsigned char *) output_items[0];
 	long packet_length = 0;
+	int packet_size_diff = d_check ? -4 : 4;
 	unsigned int crc;
 
 	std::vector<gr_tag_t> tags;
@@ -88,7 +90,7 @@ namespace gr {
 		}
 	}
 	assert(packet_length != 0);
-	assert(packet_length <= d_mtu-4);
+	assert(packet_length <= d_mtu+packet_size_diff);
 	assert(noutput_items >= d_mtu);
 
 	if (ninput_items[0] < packet_length) {
@@ -96,10 +98,20 @@ namespace gr {
 		return 0;
 	}
 
-	// Copy data & CRC
-	memcpy((void *) out, (const void *) in, packet_length);
+	memcpy((void *) out, (const void *) in,
+		d_check ? packet_length-4 : packet_length);
+	consume_each(packet_length);
+	d_input_size = 1;
+
 	crc = digital_crc32(in, packet_length);
-	memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
+	if (d_check) {
+		if (crc != 0) {
+			// Drop package
+			return 0;
+		}
+	} else {
+		memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
+	}
 
 	// Set tags (new packet length, all other tags are left unchanged)
 	this->add_item_tag(0, this->nitems_written(0),
@@ -115,9 +127,7 @@ namespace gr {
 		}
 	}
 
-	consume_each(packet_length);
-	d_input_size = 1;
-	return packet_length + 4;
+	return packet_length + packet_size_diff;
     }
 
   } /* namespace ofdm */

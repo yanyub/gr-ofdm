@@ -33,10 +33,11 @@ namespace gr {
     private:
 	int d_input_size;
 	int d_mtu;
+	bool d_check;
     std::string d_lengthtagname;
 
     public:
-      crc32_bb_impl(int mtu, const std::string& lengthtagname);
+      crc32_bb_impl(bool check, int mtu, const std::string& lengthtagname);
       ~crc32_bb_impl();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);

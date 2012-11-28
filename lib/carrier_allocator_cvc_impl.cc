@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <algorithm>
 #include <gr_io_signature.h>
 #include "carrier_allocator_cvc_impl.h"
 
@@ -93,49 +94,76 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-	long packet_length;
-	long n_symbols_read;
-	gr_complex next_symbol;
+	int frame_length;
 
 	std::vector<gr_tag_t> tags;
 	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+1);
 	for (int i = 0; i < tags.size(); i++) {
 		if (pmt::pmt_symbol_to_string(tags[i].key) == d_tag_len_key) {
-			packet_length = pmt::pmt_to_long(tags[i].value);
+			frame_length = pmt::pmt_to_long(tags[i].value);
 		}
 	}
+	assert(frame_length);
 
-	if (ninput_items[0] < packet_length) { // FIXME check output buffer >= n_ofdm_symbols * sizeof(gr_complex)
-		d_input_size = packet_length;
+	if (ninput_items[0] < frame_length) { // FIXME check output buffer >= n_ofdm_symbols * sizeof(gr_complex)
+		d_input_size = frame_length;
 		return 0;
 	}
 
-	long n_ofdm_symbols = packet_length / d_fft_len;
-	if (packet_length % d_fft_len)
-		n_ofdm_symbols++;
-
-	for (int i = 0; i < n_ofdm_symbols; i++) {
-		int curr_set = 0;
-		for (int k = 0; k < d_occupied_carriers[curr_set].size(); k++) {
-			if (n_symbols_read < packet_length) {
-				next_symbol = *out++;
-			} else { // Padding
-				next_symbol = gr_complex(0, 0); // TODO perhaps putting sthg here is better than nothing
+	// 1) Copy data symbols and non-frame-length tags
+	long n_ofdm_symbols = 0;
+	int curr_set = 0;
+	int symbols_to_allocate = d_occupied_carriers[0].size();
+	int symbols_allocated = 0;
+	for (int i = 0; i < frame_length; i++) {
+		if (symbols_allocated == 0) {
+			// Copy all tags associated with these input symbols onto this OFDM symbol
+			this->get_tags_in_range(tags, 0,
+					        this->nitems_read(0)+i,
+					        this->nitems_read(0)+std::max(i+symbols_to_allocate, frame_length)
+						);
+			for (int t = 0; t < tags.size(); t++) {
+				if (tags[t].offset != this->nitems_read(0)
+				    || pmt::pmt_symbol_to_string(tags[t].key) != d_tag_len_key) {
+					this->add_item_tag(0, this->nitems_written(0)+n_ofdm_symbols,
+							   tags[i].key,
+							   tags[i].value);
+				}
 			}
-			out[d_occupied_carriers[curr_set][k]] = next_symbol;
 		}
+		if (symbols_allocated == symbols_to_allocate) {
+			curr_set = (curr_set + 1) % d_occupied_carriers.size();
+			symbols_to_allocate = d_occupied_carriers[curr_set].size();
+			symbols_allocated = 0;
+			n_ofdm_symbols++;
+		}
+		out[n_ofdm_symbols * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated]] = in[i];
+		symbols_allocated++;
+	}
+	if (symbols_allocated < symbols_to_allocate) { // I.e. the last OFDM symbol wasn't fully filled
+		for (int i = 0; i < symbols_to_allocate-symbols_allocated; i++) {
+			// FIXME perhaps sending something random is better than sending zeroes?
+			out[n_ofdm_symbols * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated + i]] = gr_complex(0, 0);
+		}
+
+	}
+
+	// 2) Copy pilot symbols
+	curr_set = 0;
+	for (int i = 0; i < n_ofdm_symbols; i++) {
 		for (int k = 0; k < d_pilot_carriers[curr_set].size(); k++) {
-			out[d_pilot_carriers[curr_set][k]] = d_pilot_symbols[curr_set][k];
+			out[i * d_fft_len + d_pilot_carriers[curr_set][k]] = d_pilot_symbols[curr_set][k];
 		}
 		curr_set = (curr_set + 1) % d_pilot_carriers.size();
 	}
-	consume_each(packet_length); // FIXME if looped, packet_length * n_packets
-	this->add_item_tag(0, this->nitems_written(0), // FIXME same as above
-			   pmt::pmt_string_to_symbol("mux_length"),
+
+	// 3) Housekeeping
+	consume_each(frame_length);
+	this->add_item_tag(0, this->nitems_written(0),
+			   pmt::pmt_string_to_symbol(d_tag_len_key),
 			   pmt::pmt_from_long(n_ofdm_symbols));
 
-        // Tell runtime system how many output items we produced.
-        return n_ofdm_symbols; // FIXME n_ofdm_symbols * n_packets
+        return n_ofdm_symbols;
     }
 
 
