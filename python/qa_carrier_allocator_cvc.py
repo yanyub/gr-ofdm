@@ -30,20 +30,34 @@ class qa_carrier_allocator_cvc (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t (self):
+        """
+        - 6 symbols per carrier
+        - 2 pilots per carrier
+        - have enough data for nearly 3 OFDM symbols
+        """
+        tx_symbols = range(16);
+        pilot_symbols = (1j, 2j, 3j, 4j)
+        occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
+        pilot_carriers = ((2, 13), (3, 12))
+        expected_result = (0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,  0,
+                           0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12, 0,
+                           0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
         fft_len = 16
-        occupied_carriers = ((1, 3, 4, 11, 12, 14),)
-        pilot_carriers = ((2, 13),)
-        pilot_symbols = ((1, 1),)
-        src = gr.vector_source_c(FIXME)
+        mtu = 4096
+        tag_name = "len"
+
+        src = gr.vector_source_c(tx_symbols) # FIXME add the tags
         alloc = ofdm.carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols,
-                       "length")
-        sink = gr.vector_sink_c()
-        # set up fg
+                       tag_name)
+        sink = gr.vector_sink_c(fft_len)
+
+        self.tb.connect(src, alloc, sink)
         self.tb.run ()
-        # check data
+        self.assertEqual(sink.data(), expected_result)
+
 
 
 if __name__ == '__main__':
