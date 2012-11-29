@@ -84,7 +84,7 @@ namespace gr {
         unsigned char *out = (unsigned char *) output_items[0];
 
 	long packet_length = 0;
-	
+
 	std::vector<gr_tag_t> tags;
 	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+1);  // get tags from first element only
 

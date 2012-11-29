@@ -4,35 +4,34 @@
   <key>ofdm_carrier_allocator_cvc</key>
   <category>ofdm</category>
   <import>import ofdm</import>
-  <make>ofdm.carrier_allocator_cvc(n_carriers, occupied_carriers, pilot_carriers, pilot_symbols)</make>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
+  <make>ofdm.carrier_allocator_cvc($fft_len, $occupied_carriers, $pilot_carriers, $pilot_symbols, $tag_len_key, $mtu)</make>
   <param>
-    <name>...</name>
-    <key>...</key>
-    <type>...</type>
+    <name>FFT length</name>
+    <key>fft_len</key>
+    <type>int</type>
   </param>
-
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
+  <param>
+    <name>Occupied Carriers</name>
+    <key>$occupied_carriers</key>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Pilot Carriers</name>
+    <key>$pilot_carriers</key>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Pilot Symbols</name>
+    <key>$pilot_symbols</key>
+    <type>raw</type>
+  </param>
   <sink>
     <name>in</name>
-    <type><!-- e.g. int, real, complex, byte, short, xxx_vector, ...--></type>
+    <type>complex</type>
   </sink>
-
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
-  <source>
+  <sink>
     <name>out</name>
-    <type><!-- e.g. int, real, complex, byte, short, xxx_vector, ...--></type>
-  </source>
+    <type>complex_vector</type>
+    <vlen>$fft_len</vlen>
+  </sink>
 </block>

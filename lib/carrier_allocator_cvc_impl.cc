@@ -94,14 +94,17 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-	int frame_length;
+	long frame_length;
 
 	std::vector<gr_tag_t> tags;
 	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+1);
-	for (int i = 0; i < tags.size(); i++) {
+	for (unsigned i = 0; i < tags.size(); i++) {
 		if (pmt::pmt_symbol_to_string(tags[i].key) == d_tag_len_key) {
 			frame_length = pmt::pmt_to_long(tags[i].value);
 		}
+	}
+	if (!frame_length) {
+		return -1;
 	}
 	assert(frame_length);
 
@@ -117,10 +120,11 @@ namespace gr {
 	int symbols_allocated = 0;
 	for (int i = 0; i < frame_length; i++) {
 		if (symbols_allocated == 0) {
+			n_ofdm_symbols++;
 			// Copy all tags associated with these input symbols onto this OFDM symbol
 			this->get_tags_in_range(tags, 0,
 					        this->nitems_read(0)+i,
-					        this->nitems_read(0)+std::max(i+symbols_to_allocate, frame_length)
+					        this->nitems_read(0)+std::min(i+symbols_to_allocate, (int) frame_length)
 						);
 			for (int t = 0; t < tags.size(); t++) {
 				if (tags[t].offset != this->nitems_read(0)
@@ -131,19 +135,18 @@ namespace gr {
 				}
 			}
 		}
+		out[(n_ofdm_symbols-1) * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated]] = in[i];
+		symbols_allocated++;
 		if (symbols_allocated == symbols_to_allocate) {
 			curr_set = (curr_set + 1) % d_occupied_carriers.size();
 			symbols_to_allocate = d_occupied_carriers[curr_set].size();
 			symbols_allocated = 0;
-			n_ofdm_symbols++;
 		}
-		out[n_ofdm_symbols * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated]] = in[i];
-		symbols_allocated++;
 	}
 	if (symbols_allocated < symbols_to_allocate) { // I.e. the last OFDM symbol wasn't fully filled
 		for (int i = 0; i < symbols_to_allocate-symbols_allocated; i++) {
 			// FIXME perhaps sending something random is better than sending zeroes?
-			out[n_ofdm_symbols * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated + i]] = gr_complex(0, 0);
+			out[(n_ofdm_symbols-1) * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated + i]] = gr_complex(0, 0);
 		}
 
 	}

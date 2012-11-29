@@ -19,6 +19,7 @@
 # 
 
 import time
+from gruel import pmt
 
 from gnuradio import gr, gr_unittest
 import ofdm_swig as ofdm
@@ -31,40 +32,39 @@ class qa_crc32_bb (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    #def test_check_fail (self):
-    #    " Pass a stream without a tag, check it fails "
-    #    sink = gr.vector_sink_b()
-    #    self.tb.connect(gr.vector_source_b((0,)*16), ofdm.crc32_bb(), sink)
-    #    self.tb.run()
+    #def test_crc_len (self):
+        #data = range(16)
+        #tag_name = "len"
+        #tag = gr.gr_tag_t()
+        #tag.offset = 0
+        #tag.key = pmt.pmt_string_to_symbol(tag_name)
+        #tag.value = pmt.pmt_from_long(len(data))
+        #src = gr.vector_source_b(data, (tag,), False, 1)
+        #mtu = 64
+        #crc = ofdm.crc32_bb(False, mtu, tag_name)
+        #sink = gr.vector_sink_b()
+        #self.tb.connect(src, crc, sink)
+        #self.tb.run()
+        # Check that the packets before crc_check are 4 bytes longer that the input.
+        #self.assertEqual(len(data)+4, len(sink.data()))
 
-    def test_crc_len (self):
-        data = ('hello', )
-        tx_msgq = gr.msg_queue()
-        rx1_msgq = gr.msg_queue()
-        rx2_msgq = gr.msg_queue()
-        for d in data:
-            tx_msgq.insert_tail(gr.message_from_string(d))
-        tagname = "length"
-        src  = gr.message_source(gr.sizeof_char, tx_msgq, tagname)
-        snk = gr.message_sink(gr.sizeof_char, rx1_msgq, False, tagname)
-        snk2 = gr.message_sink(gr.sizeof_char, rx2_msgq, False, tagname)
-        mtu = 4096
-        crc_check = ofdm.crc32_bb(True, mtu)
-        crc = ofdm.crc32_bb(False, mtu, tagname)
-        self.tb.connect(src, crc, crc_check, snk)
-        self.tb.connect(crc, snk2)
-        self.tb.start()
-        time.sleep(2)
-        self.tb.stop()
-        for d in data:
-            msg1 = rx1_msgq.delete_head()
-            contents1 = msg1.to_string()
-            msg2 = rx2_msgq.delete_head()
-            contents2 = msg2.to_string()
-            # Check that the packets after crc_check are the same as input.
-            self.assertEqual(d, contents1)
-            # Check that the packets before crc_check are 4 bytes longer that the input.
-            self.assertEqual(len(d)+4, len(contents2))
+    def test_crc_equal (self):
+        data = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+        tag_name = "len"
+        tag = gr.gr_tag_t()
+        tag.offset = 0
+        tag.key = pmt.pmt_string_to_symbol(tag_name)
+        tag.value = pmt.pmt_from_long(len(data))
+        src = gr.vector_source_b(data, (tag,), False, 1)
+        mtu = 64
+        crc = ofdm.crc32_bb(False, mtu, tag_name)
+        crc_check = ofdm.crc32_bb(True, mtu, tag_name)
+        sink = gr.vector_sink_b()
+        sink2 = gr.vector_sink_b()
+        self.tb.connect(src, crc, crc_check, sink)
+        self.tb.run()
+        # Check that the packets after crc_check are the same as input.
+        self.assertEqual(data, sink.data())
 
 if __name__ == '__main__':
     gr_unittest.run(qa_crc32_bb, "qa_crc32_bb.xml")

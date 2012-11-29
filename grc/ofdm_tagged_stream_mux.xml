@@ -1,38 +1,58 @@
-<?xml version="1.0"?>
 <block>
-  <name>tagged_stream_mux</name>
-  <key>ofdm_tagged_stream_mux</key>
-  <category>ofdm</category>
+  <category>OFDM</category>
   <import>import ofdm</import>
-  <make>ofdm.tagged_stream_mux(lengthtagnames)</make>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
+  <make>ofdm.tagged_stream_mux($type.size, $lengthtagnames, $MTU)</make>
+  <name>Tagged Stream Mux</name>
+  <key>ofdm_tagged_stream_mux</key>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
   <param>
-    <name>...</name>
-    <key>...</key>
-    <type>...</type>
+    <name>Length tag names</name>
+    <key>lengthtagnames</key>
+    <type>string</type>
   </param>
-
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
+  <param>
+    <name>MTU</name>
+    <key>MTU</key>
+    <type>int</type>
+    <value>4096</value>
+  </param>
   <sink>
     <name>in</name>
-    <type><!-- e.g. int, real, complex, byte, short, xxx_vector, ...--></type>
+    <type>$type</type>
+    <!--FIXME this won't work.. or will it?-->
+    <nports>lengthtagnames.size()</nports>
   </sink>
-
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
-    <type><!-- e.g. int, real, complex, byte, short, xxx_vector, ...--></type>
+    <type>$type</type>
   </source>
 </block>

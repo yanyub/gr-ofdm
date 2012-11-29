@@ -28,6 +28,8 @@
 #include "crc32_bb_impl.h"
 #include <digital_crc32.h>
 
+#include <iostream>
+
 namespace gr {
   namespace ofdm {
 
@@ -51,7 +53,7 @@ namespace gr {
     {
 	    set_output_multiple(d_mtu);
 	    set_tag_propagation_policy(TPP_DONT);
-	    set_relative_rate(1.0);
+	    //set_relative_rate(1.0);
     }
 
     /*
@@ -97,26 +99,26 @@ namespace gr {
 		d_input_size = packet_length;
 		return 0;
 	}
-
-	memcpy((void *) out, (const void *) in,
-		d_check ? packet_length-4 : packet_length);
 	consume_each(packet_length);
 	d_input_size = 1;
 
 	crc = digital_crc32(in, packet_length);
 	if (d_check) {
-		if (crc != 0) {
-			// Drop package
-			return 0;
+		if (crc != 0) { // Drop package
+			std::cout << "DROP" << std::endl;
+			// FIXME AAAHAHAHAAH
+			//return 0;
 		}
+		memcpy((void *) out, (const void *) in, packet_length-4);
 	} else {
+		memcpy((void *) out, (const void *) in, packet_length);
 		memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
 	}
 
 	// Set tags (new packet length, all other tags are left unchanged)
 	this->add_item_tag(0, this->nitems_written(0),
 			   pmt::pmt_string_to_symbol(d_lengthtagname),
-			   pmt::pmt_from_long(packet_length+4));
+			   pmt::pmt_from_long(packet_length+packet_size_diff));
 	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+packet_length);
 	for (int i = 0; i < tags.size(); i++) {
 		if (tags[i].offset != this->nitems_read(0)
