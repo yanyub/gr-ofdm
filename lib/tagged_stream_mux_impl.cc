@@ -71,9 +71,6 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-        const char *in = (const char *) input_items[0];
-        char *out = (char *) output_items[0];
-
         // Loop through all the inputs and check if we have an entire packet waiting for each
         // one.
         std::vector<long> packet_lengths;
@@ -98,19 +95,25 @@ namespace gr {
           }
           d_forecast[i] = packet_length - ninput_items[i];
         }
+        char *out = (char *) output_items[0];
         if (ready) {
           for (unsigned int i=0; i<d_nstreams; i++) {
+            const char *in = (const char *) input_items[i];
+
             std::vector<gr_tag_t> tags;
             this->get_tags_in_range(tags, i, nitems_read(i), nitems_read(i)+packet_lengths[i]);
             for (unsigned int j = 0; j < tags.size(); j++) {
-              const uint64_t offset = packet_length_sum + tags[j].offset - nitems_read(i) + nitems_written(0);
-              this->add_item_tag(0, offset, tags[j].key, tags[j].value);
+              if (pmt::pmt_symbol_to_string(tags[j].key) != d_lengthtagname) {
+                const uint64_t offset = packet_length_sum + tags[j].offset - nitems_read(i) + nitems_written(0);
+                this->add_item_tag(0, offset, tags[j].key, tags[j].value);
+              }
             }
-            memcpy((void *) (out+packet_length_sum*d_itemsize), (const void *) (in + packet_length_sum*d_itemsize), packet_lengths[i]*d_itemsize);
+            memcpy((void *) (out+packet_length_sum*d_itemsize), (const void *) in, packet_lengths[i]*d_itemsize);
             packet_length_sum += packet_lengths[i];
             consume(i, packet_lengths[i]);
             d_forecast[i] = 1;
           }
+          this->add_item_tag(0, nitems_written(0), pmt::pmt_string_to_symbol(d_lengthtagname), pmt::pmt_from_long(packet_length_sum));
           return packet_length_sum;
         }
         return 0;

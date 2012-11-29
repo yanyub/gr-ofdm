@@ -28,8 +28,9 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
     def test_1(self):
         datas = (
             ('h', 'ee', 'lll', 'qqqq'),
-            ('oooo', 'yyyyy', 'oooooo', ' pppppppppp')
+            ('oooo', 'yyyyy', 'oooooo', 'pppppppppp')
             )
+        expected = [a+b for a,b in zip(datas[0], datas[1])]
         srcs = []
         tagname = "packet_length"
         for i, data in enumerate(datas):
@@ -45,6 +46,8 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
         tb.connect(tagged_stream_mux, snk)
         tb.run()
         dataout = ofdm.utils.vectors_to_strings(snk.data(), snk.tags(), tagname)
+        for r, e in zip(dataout, expected):
+            self.assertEqual(r, e)
 
 if __name__ == '__main__':
     gr_unittest.run(qa_tagged_stream_mux, "qa_mux.xml")
