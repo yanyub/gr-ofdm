@@ -1,6 +1,17 @@
 from gnuradio import gr
 from gruel import pmt
 
+def make_lengthtags(lengths, offsets, tagname='length', vlen=1):
+    tags = []
+    assert(len(offsets) == len(lengths))
+    for offset, length in zip(offsets, lengths):
+        tag = gr.gr_tag_t()
+        tag.offset = offset/vlen
+        tag.key = pmt.pmt_string_to_symbol(tagname)
+        tag.value = pmt.pmt_from_long(length/vlen)
+        tags.append(tag)
+    return tags
+
 def string_to_vector(string):
     v = []
     for s in string:
