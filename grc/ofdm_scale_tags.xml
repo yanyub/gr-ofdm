@@ -1,9 +1,9 @@
 <block>
+  <name>Tag Scaler</name>
+  <key>ofdm_scale_tags</key>
   <category>OFDM</category>
   <import>import ofdm</import>
   <make>ofdm.scale_tags($item_size, $tag_name, $scale_factor)</make>
-  <name>Tag Scaler</name>
-  <key>ofdm_scale_tags</key>
   <param>
     <name>Item size</name>
     <key>itemsize</key>
@@ -23,11 +23,9 @@
   <sink>
     <name>in</name>
     <type>byte</type>
-    <vlen>$item_size</vlen>
   </sink>
   <source>
     <name>out</name>
     <type>byte</type>
-    <vlen>$itemsize</vlen>
   </source>
 </block>

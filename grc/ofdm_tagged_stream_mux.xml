@@ -1,9 +1,9 @@
 <block>
-  <category>OFDM</category>
-  <import>import ofdm</import>
-  <make>ofdm.tagged_stream_mux($type.size, $lengthtagnames, $MTU)</make>
   <name>Tagged Stream Mux</name>
   <key>ofdm_tagged_stream_mux</key>
+  <category>OFDM</category>
+  <import>import ofdm</import>
+  <make>ofdm.tagged_stream_mux($type.size, $ninputs, $lengthtagname, $MTU)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
@@ -35,6 +35,11 @@
 		</option>
 	</param>
   <param>
+    <name>Number of inputs</name>
+    <key>ninputs</key>
+    <type>int</type>
+  </param>
+  <param>
     <name>Length tag names</name>
     <key>lengthtagnames</key>
     <type>string</type>
@@ -42,17 +47,17 @@
   <param>
     <name>MTU</name>
     <key>MTU</key>
-    <type>int</type>
     <value>4096</value>
+    <type>int</type>
   </param>
   <sink>
     <name>in</name>
     <type>$type</type>
-    <!--FIXME this won't work.. or will it?-->
-    <nports>lengthtagnames.size()</nports>
+    <nports>$ninputs</nports>
   </sink>
   <source>
     <name>out</name>
     <type>$type</type>
   </source>
 </block>
+
