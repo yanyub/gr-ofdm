@@ -25,35 +25,33 @@ import itertools
 from gnuradio import gr, gr_unittest
 from gruel import pmt
 import ofdm_swig as ofdm
+# Nasty import from local dir
+import utils
+ofdm.utils = utils
 
 class qa_scale_tags (gr_unittest.TestCase):
 
+    def test_utils(self):
+        packets = ((1, 2, 3), (4, 5, 6, 7, 8), (9, 10))
+        tagname = "vector_length"
+        data, tags = ofdm.utils.packets_to_vectors(packets, tagname)
+        new_packets = ofdm.utils.vectors_to_packets(data, tags, tagname)
+        for np, op in zip(new_packets, packets):
+            for n, o in zip(np, op):
+                self.assertEqual(n, o)
+
     def test_001_t (self):
+        packets = ((1, 2, 3), (4, 5, 6, 7, 8), (9, 10))
+        tagname = "packet_length"
+        data, tags = ofdm.utils.packets_to_vectors(packets, tagname)
         tb = gr.top_block()
-        data = ((1, 2, 3, 4), (1, 2, 3), (1, 2, 3, 4, 5))
-        tags = []
-        pos = 0
-        for d in data:
-            tag = gr.gr_tag_t()
-            tag.offset = pos
-            tag.key = pmt.pmt_string_to_symbol("length")
-            tag.value = pmt.pmt_from_long(len(d))
-            pos += len(d)
-            tags.append(tag)
-        data = list(itertools.chain(*data))
-        print(data)
-        print(tags)
         src = gr.vector_source_b(data, tags, False, 1)
+        tag_scaler = ofdm.scale_tags(1, tagname, 2)
+        unpacker = gr.packed_to_unpacked_bb(4, gr.GR_MSB_FIRST)
         snk = gr.vector_sink_b()
-        tag_scaler = ofdm.scale_tags(1, "length", 0.5)
-        tb.connect(src, tag_scaler, snk)
-        #tb.connect(src, snk)
-        tb.start()
-        time.sleep(1)
-        tb.stop()
-        print(snk.data())
-        for tag in snk.tags():
-            print(tag.offset, pmt.pmt_symbol_to_string(tag.key), pmt.pmt_to_long(tag.value))
+        tb.connect(src, unpacker, tag_scaler, snk)
+        tb.run()
+        packets = ofdm.utils.vectors_to_packets(snk.data(), snk.tags(), tagname)
 
 if __name__ == '__main__':
     gr_unittest.run(qa_scale_tags, "qa_scale_tags.xml")
