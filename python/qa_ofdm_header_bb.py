@@ -43,7 +43,6 @@ class qa_ofdm_header_bb (gr_unittest.TestCase):
         self.tb.connect(src, header, sink)
         self.tb.run ()
         # check data
-        print sink.data()
         expected_hdr = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0)
         self.assertEqual(sink.data(), expected_hdr)
 
