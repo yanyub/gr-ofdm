@@ -32,21 +32,21 @@ class qa_crc32_bb (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    #def test_crc_len (self):
-        #data = range(16)
-        #tag_name = "len"
-        #tag = gr.gr_tag_t()
-        #tag.offset = 0
-        #tag.key = pmt.pmt_string_to_symbol(tag_name)
-        #tag.value = pmt.pmt_from_long(len(data))
-        #src = gr.vector_source_b(data, (tag,), False, 1)
-        #mtu = 64
-        #crc = ofdm.crc32_bb(False, mtu, tag_name)
-        #sink = gr.vector_sink_b()
-        #self.tb.connect(src, crc, sink)
-        #self.tb.run()
+    def test_crc_len (self):
+        data = range(16)
+        tag_name = "len"
+        tag = gr.gr_tag_t()
+        tag.offset = 0
+        tag.key = pmt.pmt_string_to_symbol(tag_name)
+        tag.value = pmt.pmt_from_long(len(data))
+        src = gr.vector_source_b(data, (tag,), False, 1)
+        mtu = 64
+        crc = ofdm.crc32_bb(False, mtu, tag_name)
+        sink = gr.vector_sink_b()
+        self.tb.connect(src, crc, sink)
+        self.tb.run()
         # Check that the packets before crc_check are 4 bytes longer that the input.
-        #self.assertEqual(len(data)+4, len(sink.data()))
+        self.assertEqual(len(data)+4, len(sink.data()))
 
     def test_crc_equal (self):
         data = (0, 1, 2, 3, 4, 5, 6, 7, 8)

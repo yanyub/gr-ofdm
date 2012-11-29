@@ -105,9 +105,7 @@ namespace gr {
 	if (d_check) {
 	  crc = digital_crc32(in, packet_length-4);
 	  if (crc != *(unsigned int *)(in+packet_length-4)) { // Drop package
-	    std::cout << "DROP" << std::endl;
-	    // FIXME AAAHAHAHAAH
-	    //return 0;
+	    return 0;
 	  }
 		memcpy((void *) out, (const void *) in, packet_length-4);
 	} else {
