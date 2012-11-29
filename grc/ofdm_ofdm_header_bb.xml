@@ -1,7 +1,7 @@
 <block>
   <category>OFDM</category>
   <import>import ofdm</import>
-  <make>ofdm.header_bb($header_len, ofdm.header_bb.default_formatter)</make>
+  <make>ofdm.header_bb($header_len, $formatter)</make>
   <name>OFDM Header Generator</name>
   <key>ofdm_header_bb</key>
   <param>
@@ -9,7 +9,12 @@
     <key>header_len</key>
     <type>int</type>
   </param>
-  <!--FIXME add callback as an option-->
+  <param>
+    <name>Formatter Callback</name>
+    <key>$formatter</key>
+    <type>raw</type>
+    <value>ofdm.header_bb.default_formatter</value>
+  </param>
   <sink>
     <name>in</name>
     <type>byte</type>
