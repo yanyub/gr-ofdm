@@ -25,7 +25,6 @@
 
 #include <gr_io_signature.h>
 #include "scale_tags_impl.h"
-#include <iostream>
 
 namespace gr {
   namespace ofdm {
@@ -64,25 +63,18 @@ namespace gr {
     {
         const char *in = (const char *) input_items[0];
         char *out = (char *) output_items[0];
-        std::cout << "Work begins" << std::endl;
         std::vector<gr_tag_t> tags;
         const uint64_t offset = this->nitems_written(0);
         this->get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
-        std::cout << "Got tags" << std::endl;
         //const size_t ninput_items = noutput_items; //assumption for sync block, this can change
         for (unsigned int j = 0; j < tags.size(); j++) {
           long value = pmt::pmt_to_long(tags[j].value);
           if (pmt::pmt_symbol_to_string(tags[j].key) == d_tagname) {
             value = long(value*d_scale_factor);
-            std::cout << "Scaled tag" << std::endl;
           }
           this->add_item_tag(0, tags[j].offset, tags[j].key, pmt::pmt_from_long(value));
-          std::cout << "Added tag" << std::endl;
         }
-        std::cout << "Finished with tags" << std::endl;
         memcpy((void *) out, (const void *) in, noutput_items*d_itemsize);
-        
-        std::cout << "Copied stream" << std::endl;
         
         // Tell runtime system how many output items we produced.
         return noutput_items;
