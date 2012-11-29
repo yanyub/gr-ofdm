@@ -21,7 +21,7 @@ def vectors_to_strings(data, tags, lengthtagname):
     packets = vectors_to_packets(data, tags, lengthtagname)
     return [vector_to_string(packet) for packet in packets]
 
-def vectors_to_packets(data, tags, lengthtagname):
+def vectors_to_packets(data, tags, lengthtagname, vlen=1):
     lengthtags = [t for t in tags
                   if pmt.pmt_symbol_to_string(t.key) == lengthtagname]
     lengths = {}
@@ -30,7 +30,7 @@ def vectors_to_packets(data, tags, lengthtagname):
             raise ValueError(
                 "More than one tags with key {0} with the same offset={1}."
                 .format(lengthtagname, tag.offset))
-        lengths[tag.offset] = pmt.pmt_to_long(tag.value)
+        lengths[tag.offset] = pmt.pmt_to_long(tag.value)*vlen
     if 0 not in lengths:
         raise ValueError("There is no tag with key {0} and an offset of 0"
                          .format(lengthtagname))
@@ -50,16 +50,16 @@ def vectors_to_packets(data, tags, lengthtagname):
         pos += length
     return packets
 
-def packets_to_vectors(packets, lengthtagname):
+def packets_to_vectors(packets, lengthtagname, vlen=1):
     tags = []
     data = []
     offset = 0
     for packet in packets:
         data.extend(packet)
         tag = gr.gr_tag_t()
-        tag.offset = offset
+        tag.offset = offset/vlen
         tag.key = pmt.pmt_string_to_symbol(lengthtagname)
-        tag.value = pmt.pmt_from_long(len(packet))
+        tag.value = pmt.pmt_from_long(len(packet)/vlen)
         tags.append(tag)
         offset = offset + len(packet)
     return data, tags
