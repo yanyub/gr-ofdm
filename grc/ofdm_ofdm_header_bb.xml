@@ -1,19 +1,19 @@
 <block>
-  <category>OFDM</category>
-  <import>import ofdm</import>
-  <make>ofdm.header_bb($header_len, $formatter)</make>
   <name>OFDM Header Generator</name>
   <key>ofdm_header_bb</key>
+  <category>OFDM</category>
+  <import>import ofdm</import>
+  <make>ofdm.header_bb($header_len)</make>
   <param>
     <name>Header Length (Bits)</name>
     <key>header_len</key>
     <type>int</type>
   </param>
+  <!--FIXME select formatter in make call -->
   <param>
     <name>Formatter Callback</name>
-    <key>$formatter</key>
+    <key>formatter</key>
     <type>raw</type>
-    <value>ofdm.header_bb.default_formatter</value>
   </param>
   <sink>
     <name>in</name>

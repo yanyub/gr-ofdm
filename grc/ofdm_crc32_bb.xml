@@ -1,40 +1,40 @@
 <?xml version="1.0"?>
 <block>
-  <name>Stream CRC32</name>
-  <key>ofdm_crc32_bb</key>
-  <category>ofdm</category>
-  <import>import ofdm</import>
-  <make>ofdm.crc32_bb($check, $mtu, $tag_name)</make>
-  <param>
-	  <name>Mode</name>
-	  <key>mode</key>
-	  <type>enum</type>
-	  <option>
-		  <name>Generate CRC</name>
-		  <key>True</key>
-	  </option>
-	  <option>
-		  <name>Check CRC</name>
-		  <key>True</key>
-	  </option>
-  </param>
-  <param>
-    <name>Length Tag Name</name>
-    <key>tag_name</key>
-    <type>string</type>
-  </param>
-  <param>
-    <name>MTU</name>
-    <key>mtu</key>
-    <type>int</type>
-    <value>4096</value>
-  </param>
-  <sink>
-    <name>in</name>
-    <type>byte</type>
-  </sink>
-  <source>
-    <name>out</name>
-    <type>byte</type>
-  </source>
+	<name>Stream CRC32</name>
+	<key>ofdm_crc32_bb</key>
+	<category>ofdm</category>
+	<import>import ofdm</import>
+	<make>ofdm.crc32_bb($check, $mtu, $tag_name)</make>
+	<param>
+		<name>Mode</name>
+		<key>mode</key>
+		<type>enum</type>
+		<option>
+			<name>Generate CRC</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>Check CRC</name>
+			<key>True</key>
+		</option>
+	</param>
+	<param>
+		<name>Length Tag Name</name>
+		<key>tag_name</key>
+		<type>string</type>
+	</param>
+	<param>
+		<name>MTU</name>
+		<key>mtu</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
 </block>
