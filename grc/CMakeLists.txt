@@ -21,5 +21,5 @@ install(FILES
     ofdm_tagged_stream_mux.xml
     ofdm_carrier_allocator_cvc.xml
     ofdm_ofdm_header_bb.xml
-    DESTINATION share/gnuradio/grc/blocks
+    ofdm_scale_tags.xml DESTINATION share/gnuradio/grc/blocks
 )
