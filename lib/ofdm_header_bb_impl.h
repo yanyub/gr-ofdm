@@ -45,7 +45,8 @@ namespace gr {
 		       gr_vector_void_star &output_items);
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      static void default_formatter(long,long,unsigned char*);
+
+       static void default_formatter(long, long, unsigned char*);
     };
 
   } // namespace ofdm

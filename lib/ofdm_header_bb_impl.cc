@@ -34,6 +34,12 @@ namespace gr {
       return gnuradio::get_initial_sptr (new ofdm_header_bb_impl(header_len, formatter_cb));
     }
 
+    ofdm_header_bb::sptr
+    ofdm_header_bb::make(int header_len)
+    {
+      return gnuradio::get_initial_sptr (new ofdm_header_bb_impl(header_len, NULL));
+    }
+
     /*
      * The private constructor
      */
@@ -55,12 +61,12 @@ namespace gr {
       // Default header formatter if the user doesn't specify one
       // BPSK, MSB first, 16 bit packet length, pad with zeros
       int i;
-      for (i=0;i<16;i++)
+      for (i=0;i<16;i++) // FIXME header_len might be < 16
 	buf[i] = (unsigned char) (packet_size >> (15-i)) & 1;
       while (i<header_len)
 	buf[i] = 0;
     }
-    
+
     /*
      * Our virtual destructor.
      */
@@ -101,12 +107,12 @@ namespace gr {
 	  pmt::pmt_t value = pmt::pmt_from_long(d_header_len);
 	  //write at tag to output port 0 with given absolute item offset
 	  this->add_item_tag(0, this->nitems_written(0), key, value);
-	  
+
 	  consume_each(packet_length);
 	  d_input_size = 1;
 	  return d_header_len;
 	}
-	
+
 	// fall through to here if we aren't given a whole input packet
 	d_input_size = packet_length;
 	return 0;

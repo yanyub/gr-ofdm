@@ -47,6 +47,7 @@ namespace gr {
         * creating new instances.
         */
        static sptr make(int header_len, void (*formatter_cb)(long, long, unsigned char*));
+       static sptr make(int header_len);
     };
 
   } // namespace ofdm

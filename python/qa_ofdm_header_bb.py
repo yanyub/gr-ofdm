@@ -19,6 +19,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
+from gruel import pmt
 import ofdm_swig as ofdm
 
 class qa_ofdm_header_bb (gr_unittest.TestCase):
@@ -30,9 +31,21 @@ class qa_ofdm_header_bb (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t (self):
-        # set up fg
+        data = (0, 1, 2, 3)
+        tag_name = "length"
+        tag = gr.gr_tag_t()
+        tag.offset = 0
+        tag.key = pmt.pmt_string_to_symbol(tag_name)
+        tag.value = pmt.pmt_from_long(len(data))
+        src = gr.vector_source_b(data, (tag,), False, 1)
+        header = ofdm.ofdm_header_bb(16)
+        sink = gr.vector_sink_b()
+        self.tb.connect(src, header, sink)
         self.tb.run ()
         # check data
+        print sink.data()
+        expected_hdr = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0)
+        self.assertEqual(sink.data(), expected_hdr)
 
 
 if __name__ == '__main__':
