@@ -31,7 +31,6 @@ def vectors_to_packets(data, tags, lengthtagname):
                 "More than one tags with key {0} with the same offset={1}."
                 .format(lengthtagname, tag.offset))
         lengths[tag.offset] = pmt.pmt_to_long(tag.value)
-        print(tag.offset, lengths[tag.offset])
     if 0 not in lengths:
         raise ValueError("There is no tag with key {0} and an offset of 0"
                          .format(lengthtagname))
@@ -43,7 +42,6 @@ def vectors_to_packets(data, tags, lengthtagname):
                              "We were expecting one."
                              .format(lengthtagname, pos))
         length = lengths[pos]
-        print(pos, length)
         if length == 0:
             raise ValueError("Packets cannot have zero length.")
         if pos+length > len(data):
