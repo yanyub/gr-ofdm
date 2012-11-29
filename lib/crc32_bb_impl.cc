@@ -28,8 +28,6 @@
 #include "crc32_bb_impl.h"
 #include <digital_crc32.h>
 
-#include <iostream>
-
 namespace gr {
   namespace ofdm {
 
@@ -99,7 +97,6 @@ namespace gr {
 		d_input_size = packet_length;
 		return 0;
 	}
-	consume_each(packet_length);
 	d_input_size = 1;
 
 	if (d_check) {
@@ -128,6 +125,7 @@ namespace gr {
 		}
 	}
 
+	consume_each(packet_length);
 	return packet_length + packet_size_diff;
     }
 
