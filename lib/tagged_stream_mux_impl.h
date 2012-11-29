@@ -30,14 +30,14 @@ namespace gr {
     class tagged_stream_mux_impl : public tagged_stream_mux
     {
     private:
-      std::vector<std::string> d_lengthtagnames;
-      std::vector<uint64_t> d_items_read;
+      std::string d_lengthtagname;
       long d_MTU;
       size_t d_itemsize;
       std::vector<long> d_forecast;
+      size_t d_nstreams;
 
     public:
-      tagged_stream_mux_impl(size_t itemsize, std::vector<std::string> lengthtagnames, long MTU);
+      tagged_stream_mux_impl(size_t itemsize, unsigned int nstreams, std::string lengthtagname, long MTU);
       ~tagged_stream_mux_impl();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);

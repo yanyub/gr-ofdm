@@ -20,43 +20,32 @@
 
 from gnuradio import gr, gr_unittest
 import ofdm_swig as ofdm
+import utils
+ofdm.utils = utils
 
 class qa_tagged_stream_mux (gr_unittest.TestCase):
 
     def test_1(self):
         datas = (
-            ('hello', 'you', 'there'),
-            ('one', 'two', 'three')
+            ('h', 'ee', 'lll'),
+            ('oooo', 'yyyyy', 'xxxxxx')
             )
-        tx_msgqs = []
         srcs = []
-        tagnames = []
+        tagname = "packet_length"
         for i, data in enumerate(datas):
-            tx_msgq = gr.msg_queue () 
-            for d in data:
-                tx_msgq.insert_tail(gr.message_from_string(d))
-                tx_msgqs.append(tx_msgq)
-            tagname = "packet_length" + str(i)
-            src = gr.message_source(gr.sizeof_char, tx_msgq, tagname)
+            dat, tags = ofdm.utils.strings_to_vectors(data, tagname)
+            src = gr.vector_source_b(dat, tags, False, 1)
             srcs.append(src)
-            tagnames.append(tagname)
-        rx_msgq = gr.msg_queue ()
-
-        tb = gr.top_block()
         MTU = 4000
-        print(tagnames)
-        tagged_stream_mux = ofdm.tagged_stream_mux(gr.sizeof_char, tagnames, MTU)
-        snk = gr.message_sink(gr.sizeof_char, rx_msgq, False, "packet_length")
+        tagged_stream_mux = ofdm.tagged_stream_mux(gr.sizeof_char, len(datas), tagname, MTU)
+        snk = gr.vector_sink_b()
+        tb = gr.top_block()
         for i, src in enumerate(srcs):
             tb.connect(src, (tagged_stream_mux, i))
         tb.connect(tagged_stream_mux, snk)
-        tb.start()
-        time.sleep(1)
-        tb.stop()
-        for d in data:
-            msg = rx_msgq.delete_head()
-            contents = msg.to_string()
-            self.assertEqual(d, contents)
+        tb.run()
+        dataout = ofdm.utils.vectors_to_strings(snk.data(), snk.tags(), tagname)
+        print(dataout)
 
 if __name__ == '__main__':
     gr_unittest.run(qa_tagged_stream_mux, "qa_mux.xml")

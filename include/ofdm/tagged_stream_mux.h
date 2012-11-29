@@ -44,7 +44,7 @@ namespace gr {
     {
     public:
        typedef boost::shared_ptr<tagged_stream_mux> sptr;
-       static sptr make(size_t itemsize, std::vector<std::string> lengthtagnames, long MTU);
+       static sptr make(size_t itemsize, unsigned int nstreams, std::string lengthtagname, long MTU);
     };
 
   } // namespace ofdm
