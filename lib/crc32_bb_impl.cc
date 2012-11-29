@@ -102,15 +102,16 @@ namespace gr {
 	consume_each(packet_length);
 	d_input_size = 1;
 
-	crc = digital_crc32(in, packet_length);
 	if (d_check) {
-		if (crc != 0) { // Drop package
-			std::cout << "DROP" << std::endl;
-			// FIXME AAAHAHAHAAH
-			//return 0;
-		}
+	  crc = digital_crc32(in, packet_length-4);
+	  if (crc != *(unsigned int *)(in+packet_length-4)) { // Drop package
+	    std::cout << "DROP" << std::endl;
+	    // FIXME AAAHAHAHAAH
+	    //return 0;
+	  }
 		memcpy((void *) out, (const void *) in, packet_length-4);
 	} else {
+	  crc = digital_crc32(in, packet_length);
 		memcpy((void *) out, (const void *) in, packet_length);
 		memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
 	}
