@@ -20,32 +20,40 @@
 # 
 
 import time
+import itertools
 
 from gnuradio import gr, gr_unittest
+from gruel import pmt
 import ofdm_swig as ofdm
 
 class qa_scale_tags (gr_unittest.TestCase):
 
     def test_001_t (self):
         tb = gr.top_block()
-        data = ('hello', 'there', 'what', 'is', 'happending')
-        tx_msgq = gr.msg_queue()
-        rx_msgq = gr.msg_queue()
+        data = ((1, 2, 3, 4), (1, 2, 3), (1, 2, 3, 4, 5))
+        tags = []
+        pos = 0
         for d in data:
-            tx_msgq.insert_tail(gr.message_from_string(d))
-        tagname = "length"
-        src  = gr.message_source(gr.sizeof_char, tx_msgq, tagname)
+            tag = gr.gr_tag_t()
+            tag.offset = pos
+            tag.key = pmt.pmt_string_to_symbol("length")
+            tag.value = pmt.pmt_from_long(len(d))
+            pos += len(d)
+            tags.append(tag)
+        data = list(itertools.chain(*data))
+        print(data)
+        print(tags)
+        src = gr.vector_source_b(data, tags, False, 1)
+        snk = gr.vector_sink_b()
         tag_scaler = ofdm.scale_tags(1, "length", 0.5)
-        snk = gr.message_sink(gr.sizeof_char, rx_msgq, False, tagname)
         tb.connect(src, tag_scaler, snk)
         #tb.connect(src, snk)
         tb.start()
         time.sleep(1)
         tb.stop()
-        for d in data:
-            msg = rx_msgq.delete_head()
-            contents = msg.to_string()
-            print(d, contents)
+        print(snk.data())
+        for tag in snk.tags():
+            print(tag.offset, pmt.pmt_symbol_to_string(tag.key), pmt.pmt_to_long(tag.value))
 
 if __name__ == '__main__':
     gr_unittest.run(qa_scale_tags, "qa_scale_tags.xml")
