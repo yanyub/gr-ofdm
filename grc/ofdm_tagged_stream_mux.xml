@@ -41,7 +41,7 @@
   </param>
   <param>
     <name>Length tag names</name>
-    <key>lengthtagnames</key>
+    <key>lengthtagname</key>
     <type>string</type>
   </param>
   <param>
@@ -50,14 +50,22 @@
     <value>4096</value>
     <type>int</type>
   </param>
+  <param>
+    <name>Vector Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
   <sink>
     <name>in</name>
     <type>$type</type>
+    <vlen>$vlen</vlen>
     <nports>$ninputs</nports>
   </sink>
   <source>
     <name>out</name>
     <type>$type</type>
+    <vlen>$vlen</vlen>
   </source>
 </block>
 

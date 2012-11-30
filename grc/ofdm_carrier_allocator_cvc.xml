@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>carrier_allocator_cvc</name>
+  <name>Carrier Allocator</name>
   <key>ofdm_carrier_allocator_cvc</key>
   <category>ofdm</category>
   <import>import ofdm</import>
@@ -29,9 +29,9 @@
     <name>in</name>
     <type>complex</type>
   </sink>
-  <sink>
+  <source>
     <name>out</name>
-    <type>complex_vector</type>
+    <type>complex</type>
     <vlen>$fft_len</vlen>
-  </sink>
+  </source>
 </block>

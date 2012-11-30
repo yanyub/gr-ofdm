@@ -10,11 +10,11 @@
     <type>int</type>
   </param>
   <!--FIXME select formatter in make call -->
-  <param>
-    <name>Formatter Callback</name>
-    <key>formatter</key>
-    <type>raw</type>
-  </param>
+  <!--<param>-->
+    <!--<name>Formatter Callback</name>-->
+    <!--<key>formatter</key>-->
+    <!--<type>raw</type>-->
+  <!--</param>-->
   <sink>
     <name>in</name>
     <type>byte</type>
