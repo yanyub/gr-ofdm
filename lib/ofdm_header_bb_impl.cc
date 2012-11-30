@@ -24,6 +24,7 @@
 
 #include <gr_io_signature.h>
 #include "ofdm_header_bb_impl.h"
+#include <iostream>
 
 namespace gr {
   namespace ofdm {
@@ -99,6 +100,7 @@ namespace gr {
 			packet_length = pmt::pmt_to_long(tags[i].value);
 		}
 	}
+	std::cout << "packet len " << packet_length << std::endl;
 
 	if (ninput_items[0] >= packet_length) {
 	  d_formatter_cb(packet_length, d_header_len, out);  // tell formatter where to put output, how long packet is

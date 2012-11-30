@@ -12,18 +12,29 @@
   </param>
   <param>
     <name>Occupied Carriers</name>
-    <key>$occupied_carriers</key>
+    <key>occupied_carriers</key>
     <type>raw</type>
   </param>
   <param>
     <name>Pilot Carriers</name>
-    <key>$pilot_carriers</key>
+    <key>pilot_carriers</key>
     <type>raw</type>
   </param>
   <param>
     <name>Pilot Symbols</name>
-    <key>$pilot_symbols</key>
+    <key>pilot_symbols</key>
     <type>raw</type>
+  </param>
+  <param>
+    <name>Tag Length Key</name>
+    <key>tag_len_key</key>
+    <type>string</type>
+  </param>
+  <param>
+    <name>MTU</name>
+    <key>mtu</key>
+    <value>4096</value>
+    <type>int</type>
   </param>
   <sink>
     <name>in</name>

@@ -66,6 +66,24 @@ class qa_crc32_bb (gr_unittest.TestCase):
         # Check that the packets after crc_check are the same as input.
         self.assertEqual(data, sink.data())
 
+    def test_crc_correct_lentag (self):
+        data = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+        tag_name = "len"
+        tag = gr.gr_tag_t()
+        tag.offset = 0
+        tag.key = pmt.pmt_string_to_symbol(tag_name)
+        tag.value = pmt.pmt_from_long(len(data))
+        src = gr.vector_source_b(data, (tag,), False, 1)
+        mtu = 64
+        crc = ofdm.crc32_bb(False, mtu, tag_name)
+        crc_check = ofdm.crc32_bb(True, mtu, tag_name)
+        sink = gr.vector_sink_b()
+        sink2 = gr.vector_sink_b()
+        self.tb.connect(src, crc, crc_check, sink)
+        self.tb.run()
+        # Check that the packets after crc_check are the same as input.
+        self.assertEqual(data, sink.data())
+
 if __name__ == '__main__':
     gr_unittest.run(qa_crc32_bb, "qa_crc32_bb.xml")
 

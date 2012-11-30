@@ -4,7 +4,7 @@
 	<key>ofdm_crc32_bb</key>
 	<category>ofdm</category>
 	<import>import ofdm</import>
-	<make>ofdm.crc32_bb($check, $mtu, $tag_name)</make>
+	<make>ofdm.crc32_bb($mode, $mtu, $tag_name)</make>
 	<param>
 		<name>Mode</name>
 		<key>mode</key>

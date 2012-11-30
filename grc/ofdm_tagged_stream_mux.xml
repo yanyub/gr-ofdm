@@ -3,7 +3,7 @@
   <key>ofdm_tagged_stream_mux</key>
   <category>OFDM</category>
   <import>import ofdm</import>
-  <make>ofdm.tagged_stream_mux($type.size, $ninputs, $lengthtagname, $MTU)</make>
+  <make>ofdm.tagged_stream_mux($type.size*$vlen, $ninputs, $lengthtagname, $MTU)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
