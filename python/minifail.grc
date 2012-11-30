@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Fri Nov 30 11:15:52 2012</timestamp>
+  <timestamp>Fri Nov 30 14:48:36 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -53,76 +53,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>import</key>
-    <param>
-      <key>id</key>
-      <value>import_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>import</key>
-      <value>import ofdm.utils</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(481, 46)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>import</key>
-    <param>
-      <key>id</key>
-      <value>import_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>import</key>
-      <value>import random</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(579, 35)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>64</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(294, 15)</value>
+      <value>(0, -5)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -145,7 +76,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(13, 95)</value>
+      <value>(0, 83)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -168,7 +99,76 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(-1, 213)</value>
+      <value>(0, 151)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>64</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(192, 0)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>import</key>
+    <param>
+      <key>id</key>
+      <value>import_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>import</key>
+      <value>import ofdm.utils</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(266, -1)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>import</key>
+    <param>
+      <key>id</key>
+      <value>import_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>import</key>
+      <value>import random</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(365, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -191,7 +191,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 87)</value>
+      <value>(99, 82)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -199,38 +199,22 @@
     </param>
   </block>
   <block>
-    <key>gr_tag_debug</key>
+    <key>variable</key>
     <param>
       <key>id</key>
-      <value>gr_tag_debug_0_0_0_0</value>
+      <value>packet_len</value>
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>Post-Copy</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>display</key>
       <value>True</value>
     </param>
     <param>
+      <key>value</key>
+      <value>500</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(860, 111)</value>
+      <value>(0, 223)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -238,49 +222,10 @@
     </param>
   </block>
   <block>
-    <key>gr_tag_debug</key>
+    <key>gr_vector_source_x</key>
     <param>
       <key>id</key>
-      <value>gr_tag_debug_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>Start</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>display</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(443, 384)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_null_sink</key>
-    <param>
-      <key>id</key>
-      <value>gr_null_sink_0</value>
+      <value>gr_vector_source_x_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -291,121 +236,24 @@
       <value>complex</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>vector</key>
+      <value>[random.randint(0, 255) for i in range(packet_len)]</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(918, 432)</value>
+      <key>tags</key>
+      <value>ofdm.utils.make_lengthtags((packet_len,), (0,), length_tag_name)</value>
     </param>
     <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_tag_debug</key>
-    <param>
-      <key>id</key>
-      <value>gr_tag_debug_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>Post-Alloc</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>display</key>
+      <key>repeat</key>
       <value>True</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(592, 392)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_kludge_copy</key>
-    <param>
-      <key>id</key>
-      <value>gr_kludge_copy_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_ports</key>
+      <key>vlen</key>
       <value>1</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>64</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(673, 170)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_cyclic_prefixer</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_cyclic_prefixer_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>input_size</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>output_size</key>
-      <value>fft_len+cp_len</value>
-    </param>
-    <param>
-      <key>rolloff</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>tagname</key>
-      <value>length_tag_name</value>
-    </param>
-    <param>
-      <key>mtu</key>
-      <value>4096</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(700, 257)</value>
+      <value>(186, 81)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -448,7 +296,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 132)</value>
+      <value>(444, 65)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -456,10 +304,10 @@
     </param>
   </block>
   <block>
-    <key>gr_head</key>
+    <key>gr_kludge_copy</key>
     <param>
       <key>id</key>
-      <value>gr_head_0</value>
+      <value>gr_kludge_copy_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -470,16 +318,16 @@
       <value>complex</value>
     </param>
     <param>
-      <key>num_items</key>
-      <value>64*10*10000</value>
-    </param>
-    <param>
-      <key>vlen</key>
+      <key>num_ports</key>
       <value>1</value>
     </param>
     <param>
+      <key>vlen</key>
+      <value>fft_len</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(249, 324)</value>
+      <value>(691, 105)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -487,10 +335,49 @@
     </param>
   </block>
   <block>
-    <key>gr_vector_source_x</key>
+    <key>digital_ofdm_cyclic_prefixer</key>
     <param>
       <key>id</key>
-      <value>gr_vector_source_x_1</value>
+      <value>digital_ofdm_cyclic_prefixer_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>input_size</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>output_size</key>
+      <value>fft_len+cp_len</value>
+    </param>
+    <param>
+      <key>rolloff</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>tagname</key>
+      <value>length_tag_name</value>
+    </param>
+    <param>
+      <key>mtu</key>
+      <value>4096</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(742, 204)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_null_sink</key>
+    <param>
+      <key>id</key>
+      <value>gr_null_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -501,30 +388,24 @@
       <value>complex</value>
     </param>
     <param>
-      <key>vector</key>
-      <value>[random.randint(0, 255) for i in range(64*10)]</value>
-    </param>
-    <param>
-      <key>tags</key>
-      <value>ofdm.utils.make_lengthtags((64*10,), (0,), length_tag_name)</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
       <key>vlen</key>
       <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(116, 169)</value>
+      <value>(575, 240)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
+  <connection>
+    <source_block_id>gr_vector_source_x_1</source_block_id>
+    <sink_block_id>ofdm_carrier_allocator_cvc_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
   <connection>
     <source_block_id>ofdm_carrier_allocator_cvc_0</source_block_id>
     <sink_block_id>gr_kludge_copy_0</sink_block_id>
@@ -538,44 +419,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_vector_source_x_1</source_block_id>
-    <sink_block_id>gr_head_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_head_0</source_block_id>
-    <sink_block_id>ofdm_carrier_allocator_cvc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>ofdm_carrier_allocator_cvc_0</source_block_id>
-    <sink_block_id>gr_tag_debug_0_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>digital_ofdm_cyclic_prefixer_0</source_block_id>
     <sink_block_id>gr_null_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_kludge_copy_0</source_block_id>
-    <sink_block_id>gr_tag_debug_0_0_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_head_0</source_block_id>
-    <sink_block_id>gr_tag_debug_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>ofdm_carrier_allocator_cvc_0</source_block_id>
-    <sink_block_id>digital_ofdm_cyclic_prefixer_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
