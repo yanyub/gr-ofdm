@@ -23,6 +23,8 @@ from gruel import pmt
 
 from gnuradio import gr, gr_unittest
 import ofdm_swig as ofdm
+import utils
+ofdm.utils = utils
 
 class qa_crc32_bb (gr_unittest.TestCase):
 
@@ -67,22 +69,18 @@ class qa_crc32_bb (gr_unittest.TestCase):
         self.assertEqual(data, sink.data())
 
     def test_crc_correct_lentag (self):
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8)
-        tag_name = "len"
-        tag = gr.gr_tag_t()
-        tag.offset = 0
-        tag.key = pmt.pmt_string_to_symbol(tag_name)
-        tag.value = pmt.pmt_from_long(len(data))
-        src = gr.vector_source_b(data, (tag,), False, 1)
+        tag_name = "length"
+        packets = ((0, 1, 2, 3, 4, 5, 6, 7, 8),
+                (0, 1, 2, 3, 4, 5, 6, 7, 8))
+        data, tags = ofdm.utils.packets_to_vectors(packets, tag_name)
+        src = gr.vector_source_b(data, tags, False, 1)
         mtu = 64
         crc = ofdm.crc32_bb(False, mtu, tag_name)
-        crc_check = ofdm.crc32_bb(True, mtu, tag_name)
         sink = gr.vector_sink_b()
-        sink2 = gr.vector_sink_b()
-        self.tb.connect(src, crc, crc_check, sink)
+        self.tb.connect(src, crc, sink)
         self.tb.run()
-        # Check that the packets after crc_check are the same as input.
-        self.assertEqual(data, sink.data())
+        new_packets = ofdm.utils.vectors_to_packets(sink.data(), sink.tags(), tag_name)
+        self.assertEqual(len(new_packets), len(packets))
 
 if __name__ == '__main__':
     gr_unittest.run(qa_crc32_bb, "qa_crc32_bb.xml")

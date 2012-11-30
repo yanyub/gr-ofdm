@@ -28,6 +28,8 @@
 #include <gr_io_signature.h>
 #include "carrier_allocator_cvc_impl.h"
 
+#include <iostream>
+
 namespace gr {
   namespace ofdm {
 
@@ -94,7 +96,7 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-	long frame_length;
+	long frame_length = 0;
 
 	std::vector<gr_tag_t> tags;
 	this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0)+1);
@@ -102,9 +104,6 @@ namespace gr {
 		if (pmt::pmt_symbol_to_string(tags[i].key) == d_tag_len_key) {
 			frame_length = pmt::pmt_to_long(tags[i].value);
 		}
-	}
-	if (!frame_length) {
-		return -1;
 	}
 	assert(frame_length);
 
@@ -145,7 +144,6 @@ namespace gr {
 	}
 	if (symbols_allocated < symbols_to_allocate) { // I.e. the last OFDM symbol wasn't fully filled
 		for (int i = 0; i < symbols_to_allocate-symbols_allocated; i++) {
-			// FIXME perhaps sending something random is better than sending zeroes?
 			out[(n_ofdm_symbols-1) * d_fft_len + d_occupied_carriers[curr_set][symbols_allocated + i]] = gr_complex(0, 0);
 		}
 
