@@ -21,6 +21,8 @@
 from gnuradio import gr, gr_unittest
 from gruel import pmt
 import ofdm_swig as ofdm
+import utils
+ofdm.utils = utils
 
 class qa_ofdm_header_bb (gr_unittest.TestCase):
 
@@ -31,20 +33,22 @@ class qa_ofdm_header_bb (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t (self):
-        data = (0, 1, 2, 3)
-        tag_name = "length"
-        tag = gr.gr_tag_t()
-        tag.offset = 0
-        tag.key = pmt.pmt_string_to_symbol(tag_name)
-        tag.value = pmt.pmt_from_long(len(data))
-        src = gr.vector_source_b(data, (tag,), False, 1)
+        packets = ((1, 2, 3, 4), (1, 2), (1, 2, 3, 4))
+        tagname = "length"
+        data, tags = ofdm.utils.packets_to_vectors(packets, tagname)
+        src = gr.vector_source_b(data, tags, False, 1)
         header = ofdm.ofdm_header_bb(16)
         sink = gr.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run ()
         # check data
-        expected_hdr = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0)
-        self.assertEqual(sink.data(), expected_hdr)
+        new_packets = ofdm.utils.vectors_to_packets(sink.data(), sink.tags(), tagname)
+        expected_packets = ((0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
+                            (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0))
+        self.assertEqual(len(new_packets), len(expected_packets))
+        for ep, rp in zip(new_packets, expected_packets):
+            self.assertEqual(ep, rp)
 
 
 if __name__ == '__main__':
