@@ -24,8 +24,15 @@ include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
-add_library(gnuradio-ofdm SHARED crc32_bb_impl.cc tagged_stream_mux_impl.cc carrier_allocator_cvc_impl.cc ofdm_header_bb_impl.cc scale_tags_impl.cc )
-target_link_libraries(gnuradio-ofdm gnuradio-digital ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
+add_library(gnuradio-ofdm SHARED crc32_bb_impl.cc tagged_stream_mux_impl.cc carrier_allocator_cvc_impl.cc ofdm_header_bb_impl.cc scale_tags_impl.cc ofdm_sync_schmidlcox_cvc_impl.cc )
+target_link_libraries(
+	gnuradio-ofdm
+	gnuradio-digital
+	gnuradio-blocks
+  	gnuradio-filter
+	${Boost_LIBRARIES}
+	${GRUEL_LIBRARIES}
+	${GNURADIO_CORE_LIBRARIES})
 set_target_properties(gnuradio-ofdm PROPERTIES DEFINE_SYMBOL "gnuradio_ofdm_EXPORTS")
 
 ########################################################################
@@ -57,7 +64,9 @@ target_link_libraries(
   ${Boost_LIBRARIES}
   ${CPPUNIT_LIBRARIES}
   gnuradio-ofdm
+  gnuradio-filter
   gnuradio-digital
+  gnuradio-blocks
 )
 
 GR_ADD_TEST(test_ofdm test-ofdm)

@@ -1,0 +1,33 @@
+<block>
+  <name>Sync_schmidlcox_cvc</name>
+  <key>ofdm_sync_schmidlcox_cvc</key>
+  <category>OFDM</category>
+  <import>import ofdm</import>
+  <make>ofdm.ofdm_sync_schmidlcox_cvc($fft_len, $cp_len)</make>
+  <param>
+    <name>Fft_len</name>
+    <key>fft_len</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Cp_len</name>
+    <key>cp_len</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>freq_offset</name>
+    <type>float</type>
+  </source>
+  <source>
+    <name>detect</name>
+    <type>byte</type>
+  </source>
+  <source>
+    <name>peak</name>
+    <type>float</type>
+  </source>
+</block>

@@ -13,6 +13,7 @@
 #include "ofdm/carrier_allocator_cvc.h"
 #include "ofdm/ofdm_header_bb.h"
 #include "ofdm/scale_tags.h"
+#include "ofdm/ofdm_sync_schmidlcox_cvc.h"
 %}
 
 
@@ -27,3 +28,5 @@ GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_header_bb);
 
 %include "ofdm/scale_tags.h"
 GR_SWIG_BLOCK_MAGIC2(ofdm, scale_tags);
+%include "ofdm/ofdm_sync_schmidlcox_cvc.h"
+GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_sync_schmidlcox_cvc);
