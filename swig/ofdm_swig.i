@@ -14,6 +14,7 @@
 #include "ofdm/ofdm_header_bb.h"
 #include "ofdm/scale_tags.h"
 #include "ofdm/ofdm_sync_schmidlcox_cvc.h"
+#include "ofdm/ofdm_frame_extractor.h"
 %}
 
 
@@ -30,3 +31,5 @@ GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_header_bb);
 GR_SWIG_BLOCK_MAGIC2(ofdm, scale_tags);
 %include "ofdm/ofdm_sync_schmidlcox_cvc.h"
 GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_sync_schmidlcox_cvc);
+%include "ofdm/ofdm_frame_extractor.h"
+GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_frame_extractor);

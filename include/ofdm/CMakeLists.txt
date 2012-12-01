@@ -21,5 +21,5 @@
 # Install public header files
 ########################################################################
 install(FILES
-    api.h crc32_bb.h tagged_stream_mux.h carrier_allocator_cvc.h ofdm_header_bb.h scale_tags.h ofdm_sync_schmidlcox_cvc.h DESTINATION include/ofdm
+    api.h crc32_bb.h tagged_stream_mux.h carrier_allocator_cvc.h ofdm_header_bb.h scale_tags.h ofdm_sync_schmidlcox_cvc.h ofdm_frame_extractor.h DESTINATION include/ofdm
 )
