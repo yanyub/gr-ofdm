@@ -49,3 +49,4 @@ GR_ADD_TEST(qa_ofdm_header_bb ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/q
 GR_ADD_TEST(qa_scale_tags ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_scale_tags.py)
 GR_ADD_TEST(qa_ofdm_sync_schmidlcox_cvc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_ofdm_sync_schmidlcox_cvc.py)
 GR_ADD_TEST(qa_ofdm_frame_extractor ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_ofdm_frame_extractor.py)
+GR_ADD_TEST(qa_schmidlcox_peakdetector_fb ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_schmidlcox_peakdetector_fb.py)

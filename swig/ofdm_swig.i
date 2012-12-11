@@ -15,6 +15,7 @@
 #include "ofdm/scale_tags.h"
 #include "ofdm/ofdm_sync_schmidlcox_cvc.h"
 #include "ofdm/ofdm_frame_extractor.h"
+#include "ofdm/schmidlcox_peakdetector_fb.h"
 %}
 
 
@@ -33,3 +34,5 @@ GR_SWIG_BLOCK_MAGIC2(ofdm, scale_tags);
 GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_sync_schmidlcox_cvc);
 %include "ofdm/ofdm_frame_extractor.h"
 GR_SWIG_BLOCK_MAGIC2(ofdm, ofdm_frame_extractor);
+%include "ofdm/schmidlcox_peakdetector_fb.h"
+GR_SWIG_BLOCK_MAGIC2(ofdm, schmidlcox_peakdetector_fb);

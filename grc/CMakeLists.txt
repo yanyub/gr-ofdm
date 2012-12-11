@@ -23,5 +23,6 @@ install(FILES
     ofdm_ofdm_header_bb.xml
     ofdm_scale_tags.xml
     ofdm_ofdm_sync_schmidlcox_cvc.xml
-    ofdm_ofdm_frame_extractor.xml DESTINATION share/gnuradio/grc/blocks
+    ofdm_ofdm_frame_extractor.xml
+    ofdm_schmidlcox_peakdetector_fb.xml DESTINATION share/gnuradio/grc/blocks
 )
